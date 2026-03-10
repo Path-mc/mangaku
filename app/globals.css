@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  /* Variabel warna Mangaku */
+  --color-manga-900: #020617;
+  --color-manga-800: #0f172a;
+  --color-manga-accent: #3b82f6;
+  --color-manga-text: #f8fafc;
+  --color-manga-subtext: #94a3b8;
+}
+
+:root {
+  background-color: var(--color-manga-900);
+  color: var(--color-manga-text);
+}
+
+body {
+  min-height: 100vh;
+}
