@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import HistoryTracker from './HistoryTracker'; // <-- Import Tracker
 
 // 1. Fetch Gambar Chapter
 async function getChapterDetail(id: string) {
@@ -8,7 +9,7 @@ async function getChapterDetail(id: string) {
   return json.data;
 }
 
-// 2. Fetch Info Komik (Untuk mendapatkan daftar urutan chapter yang asli)
+// 2. Fetch Info Komik
 async function getComicDetail(comicId: string) {
   const res = await fetch(`https://citedd-komiku-api.hf.space/api/comic/info/manga/${comicId}/`, { cache: 'no-store' });
   if (!res.ok) return null;
@@ -19,11 +20,9 @@ async function getComicDetail(comicId: string) {
 export default async function ReadPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   
-  // Mencari ID Komik dari ID Chapter (misal: "manga-chapter-1" -> "manga")
   const chapterIndex = id.lastIndexOf("-chapter-");
   const comicId = chapterIndex !== -1 ? id.substring(0, chapterIndex) : id;
 
-  // Tarik data gambar DAN daftar chapter sekaligus
   const [chapter, comicInfo] = await Promise.all([
     getChapterDetail(id),
     getComicDetail(comicId)
@@ -41,24 +40,17 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
     );
   }
 
-  // LOGIKA NAVIGASI PINTAR (Mencari di dalam Array)
+  // LOGIKA NAVIGASI PINTAR
   let nextChapterId = null;
   let prevChapterId = null;
 
   if (comicInfo.chapter_list && comicInfo.chapter_list.length > 0) {
-    // Cari posisi chapter saat ini di dalam daftar
     const currentIndex = comicInfo.chapter_list.findIndex((ch: any) => ch.endpoint.includes(id));
-
     if (currentIndex !== -1) {
-      // Ingat: Daftar chapter biasanya dari Terabaru (Atas/0) ke Terlama (Bawah)
-      
-      // Prev Chapter (Chapter Sebelumnya = Lebih lama = Index lebih besar)
       if (currentIndex < comicInfo.chapter_list.length - 1) {
         const prevEndpoint = comicInfo.chapter_list[currentIndex + 1].endpoint;
         prevChapterId = prevEndpoint.replace('/ch/', '').replace(/\//g, '');
       }
-      
-      // Next Chapter (Chapter Selanjutnya = Lebih baru = Index lebih kecil)
       if (currentIndex > 0) {
         const nextEndpoint = comicInfo.chapter_list[currentIndex - 1].endpoint;
         nextChapterId = nextEndpoint.replace('/ch/', '').replace(/\//g, '');
@@ -68,6 +60,20 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
 
   return (
     <main className="min-h-screen bg-black">
+      {/* FITUR HISTORY: 
+          Komponen ini otomatis mengirim data ke Supabase 
+          setiap kali halaman ini dimuat 
+      */}
+      <HistoryTracker 
+        comic={{ 
+          id: comicId, 
+          title: comicInfo.title, 
+          thumbnail: comicInfo.thumbnail // Memastikan thumbnail tersimpan untuk tampilan "Lanjut Baca"
+        }} 
+        chapterId={id} 
+        chapterTitle={chapter.title} 
+      />
+
       {/* Navbar Atas */}
       <nav className="fixed top-0 left-0 right-0 bg-black/90 backdrop-blur-xl p-4 z-50 flex justify-between items-center border-b border-white/10">
         <Link href={`/comic/${comicId}`} className="text-manga-accent font-black italic tracking-tighter text-xl">
@@ -98,7 +104,6 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
       {/* Navigasi Bawah */}
       <div className="bg-manga-900 p-12 md:p-20 flex flex-col items-center gap-8 border-t border-white/10">
         <div className="flex flex-col md:flex-row gap-4 w-full max-w-xl">
-          {/* Tombol Sebelumnya (Hanya muncul jika ada chapter sebelumnya) */}
           {prevChapterId ? (
             <Link 
               href={`/read/${prevChapterId}`}
@@ -112,7 +117,6 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
             </div>
           )}
 
-          {/* Tombol Selanjutnya (Hanya muncul jika ada chapter selanjutnya) */}
           {nextChapterId ? (
             <Link 
               href={`/read/${nextChapterId}`}

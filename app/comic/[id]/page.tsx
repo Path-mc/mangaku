@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import ChapterList from './ChapterList'; // <-- Import komponen pintar kita
 
 async function getComicDetail(id: string) {
   const res = await fetch(`https://citedd-komiku-api.hf.space/api/comic/info/manga/${id}/`, {
@@ -55,12 +56,10 @@ export default async function ComicDetail({ params }: { params: Promise<{ id: st
 
         {/* Informasi Utama */}
         <div className="flex-grow">
-          {/* Judul Utama menggunakan Original Title */}
           <h1 className="text-4xl md:text-5xl font-black mb-2 leading-tight tracking-tighter">
             {originalTitle}
           </h1>
           
-          {/* Judul API diletakkan sebagai Alternatif */}
           <p className="text-manga-subtext italic mb-6">
             Alternatif: {comic.title}
           </p>
@@ -100,21 +99,13 @@ export default async function ComicDetail({ params }: { params: Promise<{ id: st
           <span className="w-2 h-8 bg-manga-accent rounded-full"></span>
           DAFTAR CHAPTER
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {comic.chapter_list && comic.chapter_list.map((ch: any, idx: number) => {
-            const chId = ch.endpoint.replace('/ch/', '').replace(/\//g, '');
-            return (
-              <Link 
-                key={idx} 
-                href={`/read/${chId}`} 
-                className="flex justify-between items-center bg-manga-900/60 hover:bg-manga-accent hover:border-manga-accent p-5 rounded-2xl border border-slate-700 transition-all group"
-              >
-                <span className="font-bold group-hover:text-white transition-colors">{ch.name}</span>
-                <span className="text-manga-accent group-hover:text-white bg-manga-accent/10 px-3 py-1 rounded-lg text-xs font-black">BACA</span>
-              </Link>
-            );
-          })}
-        </div>
+        
+        {/* INI BAGIAN YANG BERUBAH */}
+        {comic.chapter_list && comic.chapter_list.length > 0 ? (
+          <ChapterList chapters={comic.chapter_list} comicId={id} />
+        ) : (
+          <p className="text-manga-subtext italic text-center py-10">Belum ada chapter yang tersedia.</p>
+        )}
       </div>
     </main>
   );
