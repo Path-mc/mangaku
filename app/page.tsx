@@ -16,9 +16,9 @@ interface Comic {
 async function getComics(type: string, page: string, search?: string) {
   let url = "";
   if (search && search.trim() !== "") {
-    url = `https://Citedp-Komiku-Api.hf.space/api/comic/search/${encodeURIComponent(search)}`;
+    url = `https://CiiteddPath-komik-api.hf.space/api/comic/search/${encodeURIComponent(search)}`;
   } else {
-    url = `https://Citedp-Komiku-Api.hf.space/api/comic/${type}/page/${page}`;
+    url = `https://CiiteddPath-komik-api.hf.space/api/comic/${type}/page/${page}`;
   }
 
   try {
