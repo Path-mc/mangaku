@@ -3,7 +3,7 @@ import HistoryTracker from './HistoryTracker'; // <-- Import Tracker
 
 // 1. Fetch Gambar Chapter
 async function getChapterDetail(id: string) {
-  const res = await fetch(`https://Citedp-Komiku-Api.hf.space/api/comic/chapter/ch/${id}`, { cache: 'no-store' });
+  const res = await fetch(`https://CiiteddPath-komik-api.hf.space/api/comic/chapter/ch/${id}`, { cache: 'no-store' });
   if (!res.ok) return null;
   const json = await res.json();
   return json.data;
@@ -11,7 +11,7 @@ async function getChapterDetail(id: string) {
 
 // 2. Fetch Info Komik
 async function getComicDetail(comicId: string) {
-  const res = await fetch(`https://Citedp-Komiku-Api.hf.space/api/comic/info/manga/${comicId}/`, { cache: 'no-store' });
+  const res = await fetch(`https://CiiteddPath-komik-api.hf.space/api/comic/info/manga/${comicId}/`, { cache: 'no-store' });
   if (!res.ok) return null;
   const json = await res.json();
   return json.data;
