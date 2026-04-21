@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ChapterList from './ChapterList'; // <-- Import komponen pintar kita
 
 async function getComicDetail(id: string) {
-  const res = await fetch(`https://Citedp-Komiku-Api.hf.space/api/comic/info/manga/${id}/`, {
+  const res = await fetch(`https://CiiteddPath-komik-api.hf.space/api/comic/info/manga/${id}/`, {
     cache: 'no-store'
   });
   
