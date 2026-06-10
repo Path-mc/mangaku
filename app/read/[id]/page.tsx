@@ -96,11 +96,12 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
         {chapter.image.map((imgUrl: string, index: number) => (
           <div key={index} className="w-full max-w-3xl border-x border-white/5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src={imgUrl} 
-              alt={`Halaman ${index + 1}`}
-              className="w-full h-auto block"
-              loading={index < 3 ? "eager" : "lazy"}
+            <img
+                src={imgUrl}
+                alt={`Halaman ${index + 1}`}
+                className="w-full h-auto block"
+                loading={index < 3 ? "eager" : "lazy"}
+                referrerPolicy="no-referrer"
             />
           </div>
         ))}
