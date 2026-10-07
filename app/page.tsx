@@ -181,7 +181,23 @@ export default async function Home({
       <Suspense key={`${currentTab}-${currentPage}-${searchQuery || ''}`} fallback={<LoadingSkeleton />}>
         <ComicList currentTab={currentTab} currentPage={currentPage} searchQuery={searchQuery} />
       </Suspense>
-
+      {/* Footer: identitas produk & perusahaan (Citedd) */}
+      <footer className="mt-12 pt-6 border-t border-slate-800 text-center text-xs md:text-sm text-manga-subtext">
+        <p>
+          <strong className="text-white">MANGAKU</strong> — platform baca manga &amp; manhwa
+          Bahasa Indonesia.
+        </p>
+        <p className="mt-1">
+          Dikembangkan oleh <strong className="text-white">Citedd</strong> ·{" "}
+          <Link className="underline hover:text-white" href="/about">
+            Tentang
+          </Link>{" "}
+          ·{" "}
+          <a className="underline hover:text-white" href="mailto:mangakumail@citedd.my.id">
+            mangakumail@citedd.my.id
+          </a>
+        </p>
+      </footer>
     </main>
   );
 }
